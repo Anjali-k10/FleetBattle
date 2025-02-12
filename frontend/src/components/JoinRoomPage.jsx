@@ -1,37 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { io } from 'socket.io-client';
-
-const socket = io('http://localhost:5000'); // Backend URL
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import socket from "./socket"; // Import singleton socket
 
 const JoinRoomPage = () => {
-  const [roomId, setRoomId] = useState('');
-  const [error, setError] = useState('');
+  const [roomId, setRoomId] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
     // Listen for join confirmation or error
-    socket.on('roomJoined', (id) => {
+    socket.on("roomJoined", (id) => {
       navigate(`/waiting-room/${id}`); // Navigate to waiting room
     });
 
-    socket.on('joinError', (message) => {
+    socket.on("joinError", (message) => {
       setError(message);
     });
 
     return () => {
-      socket.off('roomJoined');
-      socket.off('joinError');
+      socket.off("roomJoined");
+      socket.off("joinError");
     };
   }, [navigate]);
 
   const handleJoinRoom = () => {
-    if (roomId.trim() === '') {
-      setError('Please enter a valid Room ID.');
+    if (roomId.trim() === "") {
+      setError("Please enter a valid Room ID.");
       return;
     }
-    socket.emit('joinRoom', roomId); // Send request to join room
-    setError(''); // Clear previous error
+    socket.emit("joinRoom", roomId); // Send request to join room
+    setError(""); // Clear previous error
   };
 
   return (

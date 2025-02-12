@@ -1,38 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { io } from 'socket.io-client';
-
-const socket = io('http://localhost:5000'); // Replace with your backend URL
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import socket from "./socket"; // Import the singleton socket
 
 const CreateRoomPage = () => {
   const [loading, setLoading] = useState(false);
-  const [roomId, setRoomId] = useState('');
+  const [roomId, setRoomId] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Listen for room ID from server
-    socket.on('roomCreated', (id) => {
+    socket.on("roomCreated", (id) => {
       setRoomId(id);
       setLoading(false);
     });
 
     return () => {
-      socket.off('roomCreated'); // Clean up the listener when component unmounts
+      socket.off("roomCreated"); // Cleanup the listener when unmounting
     };
   }, []);
 
   const createRoom = () => {
     setLoading(true);
-    socket.emit('createRoom'); // Request backend to create a room
+    socket.emit("createRoom"); // Request backend to create a room
   };
 
   const copyRoomId = () => {
     navigator.clipboard.writeText(roomId);
-    alert('Room ID copied!');
+    alert("Room ID copied!");
   };
 
   const startGame = () => {
-    navigate(`/waiting-room/${roomId}`); // Navigate to waiting room
+    navigate(`/waiting-room/${roomId}`);
   };
 
   return (
@@ -44,7 +41,7 @@ const CreateRoomPage = () => {
         onClick={createRoom}
         disabled={loading}
       >
-        {loading ? 'Creating Room...' : 'Generate Room ID'}
+        {loading ? "Creating Room..." : "Generate Room ID"}
       </button>
 
       {roomId && (
@@ -72,5 +69,6 @@ const CreateRoomPage = () => {
 };
 
 export default CreateRoomPage;
+
 
 
