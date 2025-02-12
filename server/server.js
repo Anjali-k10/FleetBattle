@@ -9,7 +9,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: '*', // Allow frontend to connect
+    origin: process.env.CLIENT_URL ||'*'|| "http://localhost:5173", // Allow frontend to connect
     methods: ['GET', 'POST'],
   },
 });
