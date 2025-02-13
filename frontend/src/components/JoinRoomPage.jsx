@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import socket from "./socket";
+import Socket from "../utils/Socket";
 
 const JoinRoomPage = () => {
   const [roomId, setRoomId] = useState("");
@@ -8,14 +8,14 @@ const JoinRoomPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    socket.on("startGame", (id) => {
+    Socket.on("startGame", (id) => {
       if (id === roomId) {
         navigate(`/game/${id}`);
       }
     });
 
     return () => {
-      socket.off("startGame");
+      Socket.off("startGame");
     };
   }, [roomId, navigate]);
 
@@ -25,7 +25,7 @@ const JoinRoomPage = () => {
       return;
     }
     setError("");
-    socket.emit("joinRoom", roomId);
+    Socket.emit("joinRoom", roomId);
   };
 
   return (

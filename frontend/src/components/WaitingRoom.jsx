@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import socket from "./socket";
+import Socket from "../utils/Socket";
 
 const WaitingRoom = () => {
   const { roomId } = useParams();
@@ -9,7 +9,7 @@ const WaitingRoom = () => {
   useEffect(() => {
     console.log(`🟡 Waiting in Room: ${roomId}`);
 
-    socket.on("startGame", (id) => {
+    Socket.on("startGame", (id) => {
       if (id === roomId) {
         console.log("🎮 Game starting...");
         navigate(`/game/${roomId}`);
@@ -17,7 +17,7 @@ const WaitingRoom = () => {
     });
 
     return () => {
-      socket.off("startGame");
+      Socket.off("startGame");
     };
   }, [roomId, navigate]);
 

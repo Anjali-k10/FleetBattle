@@ -2,7 +2,7 @@ import { io } from "socket.io-client";
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:5000";
 
-const socket = io(SERVER_URL, {
+const Socket = io(SERVER_URL, {
   transports: ["websocket"],
   reconnection: true,
   reconnectionAttempts: Infinity,
@@ -22,4 +22,4 @@ socket.on("connect_error", (error) => {
   console.error("❌ Connection Error:", error);
 });
 
-export default socket;
+export default Socket;
