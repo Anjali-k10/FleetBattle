@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import socket from "./socket"; // Ensure socket is correctly imported
+import socket from "./socket";
 
 const CreateRoomPage = () => {
   const [roomId, setRoomId] = useState(null);
@@ -8,23 +8,29 @@ const CreateRoomPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const handleRoomCreated = (id) => {
-      console.log("🔹 Room Created:", id);
+    socket.on("roomCreated", (id) => {
+      console.log("🔹 New Room Created:", id);
       setRoomId(id);
       setLoading(false);
-    };
+    });
 
-    socket.on("roomCreated", handleRoomCreated);
+    socket.on("startGame", (id) => {
+      if (id === roomId) {
+        console.log("🎮 Game starting for Room ID:", id);
+        navigate(`/game/${id}`);
+      }
+    });
 
     return () => {
-      socket.off("roomCreated", handleRoomCreated);
+      socket.off("roomCreated");
+      socket.off("startGame");
     };
-  }, []);
+  }, [roomId, navigate]);
 
   const createRoom = () => {
-    console.log("➡️ Requesting room creation...");
+    console.log("➡️ Requesting new room creation...");
     setLoading(true);
-    setRoomId(null);
+    setRoomId(null); // Reset room ID before making a request
     socket.emit("createRoom");
   };
 
@@ -37,9 +43,9 @@ const CreateRoomPage = () => {
       </button>
 
       {roomId && (
-        <div>
+        <div className="mt-4">
           <p className="text-lg font-semibold">Room ID: {roomId}</p>
-          <p className="text-sm text-gray-600">Share this ID with another player.</p>
+          <p>Share this ID with a friend to join!</p>
         </div>
       )}
     </div>
