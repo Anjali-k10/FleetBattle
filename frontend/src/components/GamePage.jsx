@@ -3,19 +3,16 @@ import { useNavigate, useParams } from "react-router-dom";
 import Timer from "./Timer";
 import Grid from "./Grid";
 import ShipSelection from "./ShipSelection";
-import ship1 from "../assets/ship-1.png";
-import ship2 from "../assets/ship-2.png";
-import ship3 from "../assets/ship-3.png";
-import ship4 from "../assets/ship-4.png";
-import ship5 from "../assets/ship-5.png";
-
 const SHIPS = [
-  { name: "Destroyer", size: 2, image: ship1 },
-  { name: "Submarine", size: 3, image: ship2 },
-  { name: "Cruiser", size: 4, image: ship3 },
-  { name: "Battleship", size: 5, image: ship4 },
-  { name: "Carrier", size: 6, image: ship5 },
+  { name: "Destroyer", size: 2, image: "/Ships/ship-1.png" },
+  { name: "Submarine", size: 3, image: "/Ships/ship-2.png" },
+  { name: "Cruiser", size: 4, image: "/Ships/ship-3.png" },
+  { name: "Battleship", size: 5, image: "/Ships/ship-4.png" },
+  { name: "Carrier", size: 6, image: "/Ships/ship-5.png" },
 ];
+
+
+
 
 const createEmptyGrid = (size) => {
   return new Array(size).fill(null).map(() => new Array(size).fill(null));
