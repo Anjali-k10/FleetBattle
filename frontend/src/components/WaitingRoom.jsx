@@ -1,15 +1,18 @@
 import React, { useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import socket from "./socket";
+import { useParams, useNavigate } from "react-router-dom";
+import socket from "../socket";
 
-const WaitingRoomPage = () => {
+const WaitingRoom = () => {
   const { roomId } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log(`🟡 Waiting in Room: ${roomId}`);
+
     socket.on("startGame", (id) => {
       if (id === roomId) {
-        navigate(`/game/${id}`);
+        console.log("🎮 Game starting...");
+        navigate(`/game/${roomId}`);
       }
     });
 
@@ -19,11 +22,11 @@ const WaitingRoomPage = () => {
   }, [roomId, navigate]);
 
   return (
-    <div>
-      <h1>Waiting for another player to join...</h1>
-      <p>Room ID: {roomId}</p>
+    <div className="flex flex-col items-center justify-center h-screen bg-gray-200 p-4 space-y-6">
+      <h1 className="text-3xl font-semibold text-blue-600">Waiting for Player...</h1>
+      <p className="text-lg">Room ID: {roomId}</p>
     </div>
   );
 };
 
-export default WaitingRoomPage;
+export default WaitingRoom;
