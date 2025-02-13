@@ -10,6 +10,7 @@ const CreateRoomPage = () => {
 
   useEffect(() => {
     socket.on("roomCreated", (id) => {
+      console.log("🔹 Room Created:", id);
       setRoomId(id);
       setLoading(false);
       setIsWaiting(true);
@@ -17,6 +18,7 @@ const CreateRoomPage = () => {
 
     socket.on("startGame", (id) => {
       if (id === roomId) {
+        console.log("🎮 Game starting for Room ID:", id);
         navigate(`/game/${id}`);
       }
     });
@@ -28,6 +30,7 @@ const CreateRoomPage = () => {
   }, [roomId, navigate]);
 
   const createRoom = () => {
+    console.log("➡️ Requesting room creation...");
     setLoading(true);
     setRoomId(null);
     setIsWaiting(false);
