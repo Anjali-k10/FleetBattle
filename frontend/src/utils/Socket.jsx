@@ -10,15 +10,15 @@ const Socket = io(SERVER_URL, {
   timeout: 10000,
 });
 
-socket.on("connect", () => {
+Socket.on("connect", () => {
   console.log("✅ Connected to server:", SERVER_URL);
 });
 
-socket.on("disconnect", (reason) => {
+Socket.on("disconnect", (reason) => {
   console.warn("🚪 Disconnected:", reason);
 });
 
-socket.on("connect_error", (error) => {
+Socket.on("connect_error", (error) => {
   console.error("❌ Connection Error:", error);
 });
 
