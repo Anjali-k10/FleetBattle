@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import socket from "./socket"; // Import singleton socket
+import socket from "./socket";
 
 const JoinRoomPage = () => {
   const [roomId, setRoomId] = useState("");
@@ -8,50 +8,32 @@ const JoinRoomPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Listen for join confirmation or error
-    socket.on("roomJoined", (id) => {
-      navigate(`/waiting-room/${id}`); // Navigate to waiting room
-    });
-
-    socket.on("joinError", (message) => {
-      setError(message);
+    socket.on("startGame", (id) => {
+      if (id === roomId) {
+        navigate(`/game/${id}`);
+      }
     });
 
     return () => {
-      socket.off("roomJoined");
-      socket.off("joinError");
+      socket.off("startGame");
     };
-  }, [navigate]);
+  }, [roomId, navigate]);
 
   const handleJoinRoom = () => {
-    if (roomId.trim() === "") {
-      setError("Please enter a valid Room ID.");
+    if (!roomId.trim()) {
+      setError("Enter a valid Room ID.");
       return;
     }
-    socket.emit("joinRoom", roomId); // Send request to join room
-    setError(""); // Clear previous error
+    setError("");
+    socket.emit("joinRoom", roomId);
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-200 p-4 space-y-6">
-      <h1 className="text-4xl font-semibold text-blue-600">Join Room</h1>
-
-      <input
-        type="text"
-        placeholder="Enter Room ID"
-        value={roomId}
-        onChange={(e) => setRoomId(e.target.value)}
-        className="p-3 border rounded-lg w-64 text-center"
-      />
-
-      {error && <p className="text-red-500">{error}</p>}
-
-      <button
-        className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
-        onClick={handleJoinRoom}
-      >
-        Join Game
-      </button>
+    <div className="flex flex-col items-center">
+      <h1>Join Room</h1>
+      <input type="text" value={roomId} onChange={(e) => setRoomId(e.target.value)} />
+      {error && <p>{error}</p>}
+      <button onClick={handleJoinRoom}>Join Game</button>
     </div>
   );
 };

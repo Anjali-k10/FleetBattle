@@ -1,12 +1,14 @@
 import { io } from "socket.io-client";
 
-const SERVER_URL = "http://localhost:5000"; // Change to deployed backend URL when needed
+// Use environment variable for backend URL
+const SERVER_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:5000";
 
 const socket = io(SERVER_URL, {
   transports: ["websocket"], // Use WebSocket instead of polling
-  reconnection: true, // Enable reconnection
-  reconnectionAttempts: 5, // Try to reconnect 5 times before failing
-  reconnectionDelay: 1000, // 1-second delay between attempts
+  reconnection: true, // Enable automatic reconnection
+  reconnectionAttempts: 10, // Increased attempts to handle Render's auto-sleep
+  reconnectionDelay: 2000, // 2-second delay between attempts
+  withCredentials: true, // Needed if backend has authentication or CORS issues
 });
 
 export default socket;
